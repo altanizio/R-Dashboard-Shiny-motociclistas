@@ -21,22 +21,22 @@ library(DT)
 
 theme_set(theme_ipsum())
 
-base_inter_final = readRDS('dados/base_inter_final_29_01_21.rds') %>% dplyr::filter(!is.na(Data))
+base_inter_final <- readRDS('dados/base_inter_final_29_01_21.rds') %>% dplyr::filter(!is.na(Data))
 
-base_inter_final_map = st_read(dsn = 'dados/ACC_SEV_s.geojson')  %>% st_transform(32724)
+base_inter_final_map <- st_read(dsn = 'dados/ACC_SEV_s.geojson')  %>% st_transform(32724)
 
-base_inter_final_map = base_inter_final_map %>% dplyr::select(CdAcidente, geometry)
-base_inter_final_map = left_join(base_inter_final_map,
+base_inter_final_map <- base_inter_final_map %>% dplyr::select(CdAcidente, geometry)
+base_inter_final_map <- left_join(base_inter_final_map,
                                  base_inter_final,
                                  by = c("CdAcidente" = "CdAcidente"))
-glossario = read_xlsx('dados/glossario.xlsx')
+glossario <- read_xlsx('dados/glossario.xlsx')
 
-ZT =  st_read(dsn = 'dados/ZT_s.geojson')  %>% st_transform(32724)
+ZT <-  st_read(dsn = 'dados/ZT_s.geojson')  %>% st_transform(32724)
 
 
 # UI
 ui <- fluidPage(
-  theme = shinytheme("lumen"),
+  theme <- shinytheme("lumen"),
   
   titlePanel(
     "Análise dos acidentes envolvendo motociclistas em interseções viárias na cidade de Fortaleza-CE dos anos de 2017 a 2019",
@@ -205,7 +205,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   output$acidentes <- renderInfoBox({
-    base_inter_final = base_inter_final %>% dplyr::filter(Severidade %in% input$Severidade,
+    base_inter_final <- base_inter_final %>% dplyr::filter(Severidade %in% input$Severidade,
                                                           Data >= ymd(as.Date(as.yearmon(
                                                             input$Data_range[1]
                                                           ))) & Data <= ymd(as.Date(as.yearmon(
@@ -225,23 +225,23 @@ server <- function(input, output, session) {
   })
   
   output$idadePlot <- renderPlotly({
-    base_inter_final = base_inter_final %>% dplyr::filter(Severidade %in% input$Severidade,
+    base_inter_final <- base_inter_final %>% dplyr::filter(Severidade %in% input$Severidade,
                                                           Data >= ymd(as.Date(as.yearmon(
                                                             input$Data_range[1]
                                                           ))) & Data <= ymd(as.Date(as.yearmon(
                                                             input$Data_range[2]
                                                           ))))
     
-    base = base_inter_final
+    base <- base_inter_final
     
-    base = base[, c(input$xcol2, 'Severidade')]
+    base <- base[, c(input$xcol2, 'Severidade')]
     
-    colnames(base)[1] = 'x'
+    colnames(base)[1] <- 'x'
     
-    base = base %>% filter_all( ~ !is.na(.))
+    base <- base %>% filter_all( ~ !is.na(.))
     
-    tipo = ifelse(input$Id077 == T, "dodge", "stack")
-    a = ggplot(data = base, aes(x = x, fill = Severidade)) + geom_bar(position =
+    tipo <- ifelse(input$Id077 == T, "dodge", "stack")
+    a <- ggplot(data = base, aes(x = x, fill = Severidade)) + geom_bar(position =
                                                                         tipo) +
       scale_fill_viridis(discrete = T) +
       ylab("") + xlab(input$xcol2) + scale_fill_brewer(palette = "Blues") + theme(legend.position =
@@ -256,7 +256,7 @@ server <- function(input, output, session) {
   })
   
   output$temporalPlot <- renderPlotly({
-    base_inter_final = base_inter_final %>% dplyr::filter(Severidade %in% input$Severidade,
+    base_inter_final <- base_inter_final %>% dplyr::filter(Severidade %in% input$Severidade,
                                                           Data >= ymd(as.Date(as.yearmon(
                                                             input$Data_range[1]
                                                           ))) & Data <= ymd(as.Date(as.yearmon(
@@ -267,13 +267,13 @@ server <- function(input, output, session) {
     
     
     if (input$Data_type == 'Mês') {
-      base =  base_inter_final %>% dplyr::filter(!is.na(Data)) %>% group_by(Ano = year(Data), Mes = month(Data)) %>% summarise(Acidentes = n())
+      base <-  base_inter_final %>% dplyr::filter(!is.na(Data)) %>% group_by(Ano = year(Data), Mes = month(Data)) %>% summarise(Acidentes = n())
       
-      base = base %>% mutate(Data = yearmonth(ymd(paste(
+      base <- base %>% mutate(Data = yearmonth(ymd(paste(
         Ano, Mes, 1, sep = "-"
       ))))
       
-      a =  ggplot(base, aes(x = Data)) +
+      a <-  ggplot(base, aes(x = Data)) +
         geom_line(aes(y = Acidentes), color = 'cyan', size = 1.5) +
         scale_x_yearmonth(date_breaks = "3 month", date_labels = "%Y %b") +
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
@@ -284,12 +284,12 @@ server <- function(input, output, session) {
       
       
     } else if (input$Data_type == 'Semestre') {
-      base =  base_inter_final %>% dplyr::filter(!is.na(Data)) %>% group_by(Ano = year(Data), semetre = semester(Data)) %>% summarise(Acidentes = n())
+      base <-  base_inter_final %>% dplyr::filter(!is.na(Data)) %>% group_by(Ano = year(Data), semetre = semester(Data)) %>% summarise(Acidentes = n())
       
-      base = base %>% mutate(Data = yq(paste(Ano, semetre + 1, sep =
+      base <- base %>% mutate(Data = yq(paste(Ano, semetre + 1, sep =
                                                "-")))
       
-      a =   ggplot(base, aes(x = Data)) +
+      a <-   ggplot(base, aes(x = Data)) +
         geom_line(aes(y = Acidentes), color = 'cyan', size = 1.5) +
         scale_x_date(date_breaks = "6 month", date_labels = "%Y") +
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
@@ -297,9 +297,9 @@ server <- function(input, output, session) {
         labs(x = "", y = '')
       ggplotly(a)
     } else{
-      base =  base_inter_final %>% dplyr::filter(!is.na(Data)) %>% mutate(Data = yearweek(Data)) %>% group_by(Data) %>% summarise(Acidentes = n())
+      base <-  base_inter_final %>% dplyr::filter(!is.na(Data)) %>% mutate(Data = yearweek(Data)) %>% group_by(Data) %>% summarise(Acidentes = n())
       
-      a =   ggplot(base, aes(x = Data)) +
+      a <-   ggplot(base, aes(x = Data)) +
         geom_line(aes(y = Acidentes), color = 'cyan', size = 1.5) +
         scale_x_yearweek(date_breaks = "15 week", date_labels = "%Y %b") +
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
@@ -314,7 +314,7 @@ server <- function(input, output, session) {
   output$mapPlot <- renderTmap({
     validate(need(input$Severidade != "", "Por favor escolha alguma severidade"))
     
-    base_inter_final_map  = base_inter_final_map  %>% dplyr::filter(Severidade %in% input$Severidade,
+    base_inter_final_map  <- base_inter_final_map  %>% dplyr::filter(Severidade %in% input$Severidade,
                                                                     Data >= ymd(as.Date(as.yearmon(
                                                                       input$Data_range[1]
                                                                     ))) & Data <= ymd(as.Date(as.yearmon(
@@ -325,7 +325,7 @@ server <- function(input, output, session) {
     ZT$`Acidentes` = lengths(st_intersects(ZT, base_inter_final_map))
     
     #Converter para mapa plotavel
-    mapa = tm_shape(ZT, name = 'Zonas de Tráfego') + tm_borders(col = 'black', lwd = 0.15) + tm_polygons(
+    mapa <- tm_shape(ZT, name = 'Zonas de Tráfego') + tm_borders(col = 'black', lwd = 0.15) + tm_polygons(
       col = "Acidentes",
       n = 5,
       alpha = 0.4,
