@@ -21,17 +21,17 @@ O objetivo dessa aplicação desenvolvida no shinyapps em R é apresentar uma an
 | Variáveis  |  Descrição  |
 | ------------------- | ------------------- |
 |  Idade |  Idade do motociclista |
-|  Experiencia_cat |  Experiência do motocilista. Obtida através da diferença de tempo entre a 1°CNH e data do acidente |
+|  Experiencia_cat |  Experiência do motociclista. Obtida através da diferença de tempo entre a 1°CNH e data do acidente |
 |  Sexo |  Sexo do motociclista |
 |  Ano_veic_cat |  Ano do veículo (colisão) no acidente com o motociclista |
-|  Comportamento |  Manobra de risco (Ex.: andando na contra-mão, ultrapassando) cometido pelo motociclista |
+|  Comportamento |  Manobra de risco (Ex.: andando na contramão, ultrapassando) cometido pelo motociclista |
 |  CNH_COND |  Condição (Vencimento) da CNH (Carteira do motociclista) |
 |  Dia |  Dia útil e Fim de semana |
 |  Natureza |  Natureza do acidente (colisão, queda, atropelamento) |
 |  Iluminação |  Iluminação da via |
 |  Tempo |  Tempo na hora do acidente |
 |  Superficie_pista |  Superfície da pista na hora do acidente |
-|  Tipo_cruzamento | Tipo do cruzamento (Ex.: Rotatoria) |
+|  Tipo_cruzamento | Tipo do cruzamento (Ex.: Rotatória) |
 |  Controle_tráfego | Controle do tráfego da interseção |
 |  Uso_solo | Tipo do uso do solo |
 |  Rel_veic | Tipo de veículo/acidente com o motociclista. Choque pesado: Caminhão, ônibus. Acidente pessoal: Queda |
@@ -40,7 +40,7 @@ O objetivo dessa aplicação desenvolvida no shinyapps em R é apresentar uma an
 |  Fiscalizac | Presença de fiscalização eletrônica a 100 metros da interseção |
 |  Noite | Noite (18h-05h) |
 |  Hora_pico | Pico (07h-09h e 17h - 19h) |
-|  Motobox | Presença de área de espera para motos em inteseções |
+|  Motobox | Presença de área de espera para motos em interseções |
 
 
 <h2 id="demonstração">Demonstração</h2>
