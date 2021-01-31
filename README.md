@@ -2,7 +2,8 @@
 
 ## Link para a aplicação: https://altanizio.shinyapps.io/acidentes_motociclistas_fortaleza/
 
-https://img.shields.io/github/license/altanizio/R-Dashboard-Shiny-motociclistas
+<a href="https://github.com/altanizio/R-Dashboard-Shiny-motociclistas/blob/main/LICENSE" alt="LICENSE">
+        <img src="https://img.shields.io/github/license/altanizio/R-Dashboard-Shiny-motociclistas" /></a>
 
 <p align="center">
  <a href="#objetivo">Objetivo</a> •
