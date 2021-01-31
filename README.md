@@ -49,5 +49,5 @@ O objetivo dessa aplicação desenvolvida no shinyapps em R é apresentar uma an
 
 <h2 id="fonte">Fonte dos dados</h2>
 
-https://vida.centralamc.com.br/
+https://vida.centralamc.com.br/registros/sinistros
 
