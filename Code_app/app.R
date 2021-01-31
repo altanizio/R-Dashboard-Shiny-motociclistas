@@ -23,7 +23,7 @@ library(sf)
 library(tmap)
 theme_set(theme_ipsum())
 
-base_inter_final = readRDS('dados/base_inter_final_21_11_20.rds') %>% dplyr::filter(!is.na(Data))
+base_inter_final = readRDS('dados/base_inter_final_29_01_21.rds') %>% dplyr::filter(!is.na(Data))
 
 base_inter_final_map = st_read(dsn = 'dados/ACC_SEV_s.geojson')  %>% st_transform(32724)
 
@@ -104,9 +104,13 @@ ui <- fluidPage(
         
         h4("Desenvolvido por Francisco Altanizio", align = "center"),
         
-        a("Fonte dos dados", href = "https://www.unifor.br/web/osv", align = "center"),
+        a(tags$i(
+          class = "fa fa-github", 
+          style = "font-size: 30pt;"
+        ), href = "https://github.com/altanizio/R-Dashboard-Shiny-motociclistas", align = "center"),
+
         
-        h6("Foram utilizado somente dados geolocalizados", align = "center")
+        h6("Foram utilizados somente dados geolocalizados. As representações gráficas demonstram somente os valores válidos.", align = "center")
         
       )
     ),
@@ -144,7 +148,7 @@ ui <- fluidPage(
                   'Uso_Solo',
                   'Rel_Veic',
                   'n_faixas',
-                  'tipo_class',
+                  'max_tipo_class',
                   'Fiscalizac',
                   "Noite",
                   "Hora_pico",
