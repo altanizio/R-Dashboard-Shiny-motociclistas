@@ -1,10 +1,10 @@
 # Análise dos acidentes envolvendo motociclistas em interseções viárias na cidade de Fortaleza-CE dos anos de 2017 a 2019
 
 ## Link para a aplicação: https://altanizio.shinyapps.io/acidentes_motociclistas_fortaleza/
-
+<p align="center">
 <a href="https://github.com/altanizio/R-Dashboard-Shiny-motociclistas/blob/main/LICENSE" alt="LICENSE">
         <img src="https://img.shields.io/github/license/altanizio/R-Dashboard-Shiny-motociclistas" /></a>
-
+</p>
 <p align="center">
  <a href="#objetivo">Objetivo</a> •
  <a href="#glossario">Glossário</a> • 
