@@ -1,11 +1,4 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+# Librarys
 
 library(shiny)
 library(tidyverse)
@@ -21,6 +14,11 @@ library(viridis)
 library(hrbrthemes)
 library(sf)
 library(tmap)
+library(readxl)
+library(DT)
+
+# Dados
+
 theme_set(theme_ipsum())
 
 base_inter_final = readRDS('dados/base_inter_final_29_01_21.rds') %>% dplyr::filter(!is.na(Data))
@@ -31,29 +29,26 @@ base_inter_final_map = base_inter_final_map %>% dplyr::select(CdAcidente, geomet
 base_inter_final_map = left_join(base_inter_final_map,
                                  base_inter_final,
                                  by = c("CdAcidente" = "CdAcidente"))
+glossario = read_xlsx('dados/glossario.xlsx')
 
 ZT =  st_read(dsn = 'dados/ZT_s.geojson')  %>% st_transform(32724)
 
 
-# Define UI for application that draws a histogram
+# UI
 ui <- fluidPage(
   theme = shinytheme("lumen"),
   
-  # Application title
   titlePanel(
     "Análise dos acidentes envolvendo motociclistas em interseções viárias na cidade de Fortaleza-CE dos anos de 2017 a 2019",
     windowTitle = "Acidentes - Motos"
   ),
   
-  # Sidebar with a slider input for number of bins
   sidebarLayout(
     shiny::column(
       width = 4,
       sidebarPanel(
-        #style = "position:fixed;width:22%;",
         align = "center",
         width = 14,
-        
         checkboxGroupButtons(
           "Severidade",
           "Severidade do acidente:",
@@ -62,17 +57,13 @@ ui <- fluidPage(
           status = "primary"
         ),
         
-        #dateRangeInput("Data_range", "Acidentes entre as datas:",
-        #               start  = "2017-01-01",
-        #               end    = "2019-12-31",
-        #               min    = "2017-01-01",
-        #               max    = "2019-12-31")
         tags$head(
           tags$style(
             type = "text/css",
             ".irs-grid-text {font-size: 12pt !important; transform: rotate(-90deg) translate(-30px);"
           )
         ),
+        
         sliderTextInput(
           inputId    = "Data_range",
           label      = "Acidentes entre as datas:",
@@ -85,11 +76,10 @@ ui <- fluidPage(
           grid       = TRUE,
           width      = "100%"
         ),
-        br(),
-        br(),
-        br(),
         
-        
+        br(),
+        br(),
+        br(),
         
         tags$head(
           tags$style(
@@ -99,16 +89,14 @@ ui <- fluidPage(
           )
         ),
         
-        
         infoBoxOutput("acidentes") ,
         
         h4("Desenvolvido por Francisco Altanizio", align = "center"),
-        
+        p(
         a(tags$i(
           class = "fa fa-github", 
           style = "font-size: 30pt;"
-        ), href = "https://github.com/altanizio/R-Dashboard-Shiny-motociclistas", align = "center"),
-
+        ), href = "https://github.com/altanizio/R-Dashboard-Shiny-motociclistas"),align = "center"),
         
         h6("Foram utilizados somente dados geolocalizados. As representações gráficas demonstram somente os valores válidos.", align = "center")
         
@@ -157,7 +145,6 @@ ui <- fluidPage(
                 options = list(`style` = "btn-info")
               ),
               
-              
               style = "unite",
               icon = shiny::icon("arrow-circle-down"),
               status = "primary",
@@ -179,8 +166,6 @@ ui <- fluidPage(
               labelWidth = "80px"
             )
           ),
-          
-          
           
           br(),
           br(),
@@ -206,21 +191,18 @@ ui <- fluidPage(
           "Mapa",
           align = "left",
           tmapOutput('mapPlot', width = "100%", height = 600)
+        ),
+        tabPanel(
+          "Glossário",
+          align = "left",
+          DTOutput('tableGlossario')
         )
       )
     ))
   )
 )
 
-# Define server logic required to draw a histogram
 server <- function(input, output, session) {
-  #output$orderNum2 <- renderText({
-  #    base_inter_final =readRDS('../../base_inter_final_21_11_20.rds')
-  #    base_inter_final = base_inter_final %>% filter(Severidade %in% input$Severidade,
-  #                                                   Data >= ymd(as.Date(as.yearmon(input$Data_range[1]))) & Data <= ymd(as.Date(as.yearmon(input$Data_range[2]))))
-  #
-  #    prettyNum(nrow(base_inter_final), big.mark=",")
-  #})
   
   output$acidentes <- renderInfoBox({
     base_inter_final = base_inter_final %>% dplyr::filter(Severidade %in% input$Severidade,
@@ -241,8 +223,6 @@ server <- function(input, output, session) {
       width = 16
     )
   })
-  
-  
   
   output$idadePlot <- renderPlotly({
     base_inter_final = base_inter_final %>% dplyr::filter(Severidade %in% input$Severidade,
@@ -342,11 +322,6 @@ server <- function(input, output, session) {
                                                                     ))))
     
     tmap_mode("view")
-    #tm = tm_shape(base_inter_final_map)  +  tm_dots(style   = 'pretty',col = 'Severidade', border.col = "black", alpha = 0.7,palette = 'Reds')  +
-    # tm_compass(type = "arrow", position = c("left", "top"),text.size = 0.5) +
-    #  tm_scale_bar(breaks = c(0, 1, 2, 3), position = c("left", "bottom"), text.size = 0.5)+ tm_basemap(server = "OpenStreetMap.Mapnik")
-    
-    
     ZT$`Acidentes` = lengths(st_intersects(ZT, base_inter_final_map))
     
     #Converter para mapa plotavel
@@ -364,7 +339,9 @@ server <- function(input, output, session) {
     
     
   })
+  
+  output$tableGlossario <- renderDT(glossario, options = list(
+    pageLength = 25))
 }
 
-# Run the application
 shinyApp(ui = ui, server = server)
